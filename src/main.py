@@ -6,6 +6,7 @@ from decouple import config
 
 app = FastAPI()
 
+# Allow port for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['http://localhost:3000'],
@@ -22,6 +23,7 @@ redis = get_redis_connection(
 )
 
 
+# Model
 class Product(HashModel):
     name: str
     price: float
@@ -31,9 +33,10 @@ class Product(HashModel):
         database = redis
 
 
+# Endpoints
 @app.get('/')
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello!"}
 
 
 @app.get('/products')
@@ -57,11 +60,11 @@ def create(product: Product):
     return product.save()
 
 
-@app.get('/product/{pk}')
+@app.get('/products/{pk}')
 def get(pk: str):
     return Product.get(pk)
 
 
-@app.delete('/product/{pk}')
+@app.delete('/products/{pk}')
 def delete(pk: str):
     return Product.delete(pk)
